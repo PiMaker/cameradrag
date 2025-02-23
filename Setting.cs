@@ -14,11 +14,11 @@ namespace CameraDrag
         }
 
         [SettingsUISection("Bindings")]
-        public bool UseLeftMouseButton { get; set; } = false;
+        public ButtonMode AllowLeftMouseButton { get; set; } = ButtonMode.Disabled;
         [SettingsUISection("Bindings")]
-        public bool RequireShift { get; set; } = false;
+        public ButtonMode AllowRightMouseButton { get; set; } = ButtonMode.AllowDragWithShift;
         [SettingsUISection("Bindings")]
-        public bool RequireCtrl { get; set; } = false;
+        public ButtonMode AllowMiddleMouseButton { get; set; } = ButtonMode.AllowDragWithShift;
 
         [SettingsUISection("Sensitivity")]
         [SettingsUISlider(min = 1f, max = 40f, step = 1f, scalarMultiplier = 1f )]
@@ -29,11 +29,19 @@ namespace CameraDrag
 
         public override void SetDefaults()
         {
-            UseLeftMouseButton = false;
-            RequireShift = false;
-            RequireCtrl = false;
+            AllowLeftMouseButton = ButtonMode.Disabled;
+            AllowRightMouseButton = ButtonMode.AllowDragWithShift;
+            AllowMiddleMouseButton = ButtonMode.AllowDragWithShift;
             Sensitivity = 5f;
             Smoothing = 2f;
+        }
+
+        public enum ButtonMode
+        {
+            Disabled,
+            AllowDrag,
+            AllowDragWithShift,
+            AllowDragWithCtrl,
         }
     }
 
@@ -51,15 +59,20 @@ namespace CameraDrag
                 { m_Setting.GetSettingsLocaleID(), "Camera Drag" },
                 { m_Setting.GetBindingMapLocaleID(), "Camera Drag Settings" },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.UseLeftMouseButton)), "Use Left Mouse Button" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.UseLeftMouseButton)), "Use the left mouse button to drag the camera. Default is right. Note that the left button may interfere with object selection." },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.RequireShift)), "Require Shift Key" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.RequireShift)), "Require the Shift key to be held to drag the camera." },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.RequireCtrl)), "Require Control Key" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.RequireCtrl)), "Require the Control key to be held to drag the camera." },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AllowLeftMouseButton)), "Use Left Mouse Button" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.AllowLeftMouseButton)), "Allow using the left mouse button to drag the camera. Optionally require Shift/Control to be pressed." },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AllowRightMouseButton)), "Use Right Mouse Button" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.AllowRightMouseButton)), "Allow using the right mouse button to drag the camera. Optionally require Shift/Control to be pressed." },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AllowMiddleMouseButton)), "Use Middle Mouse Button" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.AllowMiddleMouseButton)), "Allow using the middle mouse button to drag the camera. Optionally require Shift/Control to be pressed." },
+
+                { m_Setting.GetEnumValueLocaleID(Setting.ButtonMode.Disabled), "Disabled" },
+                { m_Setting.GetEnumValueLocaleID(Setting.ButtonMode.AllowDrag), "Always Enabled" },
+                { m_Setting.GetEnumValueLocaleID(Setting.ButtonMode.AllowDragWithShift), "Require Shift" },
+                { m_Setting.GetEnumValueLocaleID(Setting.ButtonMode.AllowDragWithCtrl), "Require Ctrl" },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.Sensitivity)), "Drag Sensitivity" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.Sensitivity)), "How quickly the camera will move relative to your mouse." },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.Sensitivity)), "How quickly the camera will move relative to your mouse. The default of 5 mostly keeps your cursor in the same place on the map." },
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.Smoothing)), "Smoothing" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.Smoothing)), "How much the camera will keep moving after you let go of the button. 0 means no smoothing." },
 
